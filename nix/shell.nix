@@ -1,14 +1,14 @@
-{
-  mkShell,
-  cargo,
-  clippy,
-  rust-analyzer,
-  rustc,
-  rustfmt,
-  steel,
+{ mkShell
+, cargo
+, clippy
+, rust-analyzer
+, rustc
+, rustfmt
+, steel
+,
 }:
 mkShell {
-  inputsFrom = steel;
+  inputsFrom = [ steel ];
 
   packages =
     [
