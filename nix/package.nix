@@ -1,19 +1,16 @@
-{
-  lib,
-  stdenv,
-  rustPlatform,
-  curl,
-  pkg-config,
-  makeBinaryWrapper,
-  libgit2,
-  oniguruma,
-  openssl,
-  sqlite,
-  zlib,
-  darwin,
-
-  includeLSP ? true,
-  includeForge ? true,
+{ lib
+, rustPlatform
+, curl
+, pkg-config
+, makeBinaryWrapper
+, libgit2
+, oniguruma
+, openssl
+, sqlite
+, zlib
+, includeLSP ? true
+, includeForge ? true
+,
 }:
 let
   manifest = lib.importTOML ../Cargo.toml;
@@ -27,8 +24,9 @@ rustPlatform.buildRustPackage {
     fileset = lib.fileset.gitTracked ../.;
   };
 
-  useFetchCargoVendor = true;
-  cargoHash = "sha256-8S/CJFXv89lS3Gyd/TgHUrMxmvYQZvbXCiPQcQtL3Jo=";
+  cargoLock = {
+    lockFile = ../Cargo.lock;
+  };
 
   nativeBuildInputs = [
     curl
