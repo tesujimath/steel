@@ -175,7 +175,7 @@ pub trait Custom: private::Sealed {
         None
     }
 
-    fn as_iterator(&self) -> Option<Box<dyn Iterator<Item = SteelVal>>> {
+    fn as_iterator(&self) -> Option<Box<dyn Iterator<Item = Result<SteelVal>>>> {
         None
     }
 
@@ -220,6 +220,9 @@ pub trait CustomType: MaybeSendSyncStatic {
     fn as_serializable_steelval(&mut self) -> Option<SerializableSteelVal> {
         None
     }
+    fn iter(&self) -> Option<Box<dyn Iterator<Item = Result<SteelVal>>>> {
+        None
+    }
     fn drop_mut(&mut self, _drop_handler: &mut IterativeDropHandler) {}
     fn visit_children(&self, _context: &mut MarkAndSweepContext) {}
     // TODO: Add this back at some point
@@ -245,6 +248,9 @@ pub trait CustomType {
         Ok(format!("#<{}>", self.name()))
     }
     fn as_serializable_steelval(&mut self) -> Option<SerializableSteelVal> {
+        None
+    }
+    fn iter(&self) -> Option<Box<dyn Iterator<Item = Result<SteelVal>>>> {
         None
     }
     fn drop_mut(&mut self, _drop_handler: &mut IterativeDropHandler) {}
@@ -278,6 +284,10 @@ impl<T: Custom + MaybeSendSyncStatic> CustomType for T {
 
     fn as_serializable_steelval(&mut self) -> Option<SerializableSteelVal> {
         <T as Custom>::into_serializable_steelval(self)
+    }
+
+    fn iter(&self) -> Option<Box<dyn Iterator<Item = Result<SteelVal>>>> {
+        self.as_iterator()
     }
 
     fn drop_mut(&mut self, drop_handler: &mut IterativeDropHandler) {

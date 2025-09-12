@@ -160,6 +160,14 @@ impl<'global, 'a> VmCore<'a> {
 
                 Ok(Box::new(nursery.as_ref().unwrap().iter().cloned().map(Ok)))
             }
+            // TODO finish this
+            SteelVal::Custom(c) => {
+                if let Some(iter) = c.read().iter() {
+                    Ok(iter)
+                } else {
+                    stop!(TypeMismatch => format!("iteration not implemented for {value}"))
+                }
+            }
             _ => {
                 stop!(TypeMismatch => format!("value unable to be converted to an iterable: {value}"))
             }
